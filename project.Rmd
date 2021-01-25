@@ -3,8 +3,11 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
-# Title: Explore And Summarize Data: Red Wine Quality
-Author: Evan Stockdale
+
+title: "Explore And Summarize Data: Red Wine Quality"
+author: "Evan Stockdale"
+
+---
 
 ## Table of Contents
 1. Dataset Introduction
@@ -28,7 +31,9 @@ Modeling wine preferences by data mining from physicochemical properties. The da
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 
+
 library(ggplot2)
+library(ggExtra)
 library(GGally)
 library(dplyr)
 library(gridExtra)
@@ -37,6 +42,11 @@ library(reshape)
 library(plotly)
 library(knitr)
 
+# knitr: Suppress code/messages/warnings 
+#        Set default plot options and center them
+knitr::opts_chunk$set(fig.width=9,fig.height=5,fig.path='Figs/',
+                      fig.align='center',tidy=TRUE,
+                      echo=FALSE,warning=FALSE,message=FALSE)
 
 ```
 
@@ -53,94 +63,111 @@ red_wine <- read.csv("C:/Users/ebsto/Documents/wineQualityReds.csv")
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots}
 
 head(red_wine)
-
+#checking out the first parts of the data frame.
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 dim(red_wine)
+#viewing number of objects and variables I'll be working with. 
+
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 str(red_wine)
+#viewing the internal structure of the data. 
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+names(red_wine)
+#taking a look at variable names. 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 qplot(data = red_wine, x = alcohol)
+#creating a plot of the alcohol content for wines in the dataset. 
 ```
 
 The majority of wines in this dataset have lower alcohol content. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-names(red_wine)
-```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 qplot(data = red_wine, x = quality)
+#creating a plot of quality rankings in the dataset. 
 ```
 
-Most of the red wines analyzed have quality scores of 5 or 6, showing that these are mid range wines. 
+Most of the red wines analyzed have quality scores of 5 or 6, showing that these are mostly mid-range wines. 
 
 # Univariate Plots Section
 
 ### Fixed Acidity
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fixed.acidity_historgrams}
 
-qplot(x = fixed.acidity, data = red_wine, binwidth = 0.1,
+qplot(x = fixed.acidity, data = red_wine, bins = 20,
       xlab = 'fixed acidity',
       ylab = '# of wines',
-color = I('black'), fill = I('#099DD9'))
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
 summary(red_wine$fixed.acidity)
+#viewing volatile acidity. 
 ```
 
 The fixed acidity has a mean of 8.32, and most samples have fixed acidity values between 7 and 9. Samples that have values higher than 12 are outliers.
 
 ### Volatile Acidity
 ```{r echo=FALSE, message=FALSE, warning=FALSE, volatile.acidity_histograms}
-qplot(x = volatile.acidity, data = red_wine, binwidth = 0.1,
+qplot(x = volatile.acidity, data = red_wine, bins = 20,
       xlab = 'volatile acidity',
       ylab = 'wines',
-color = I('black'), fill = I('#099DD9'))
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
 summary(red_wine$volatile.acidity)
+
 ```
 
 The mean value for volatile acidity is 0.5 and there are only few outliers.
 
 ### Citric Acid
 ```{r echo=FALSE, message=FALSE, warning=FALSE, citric.acid_histograms}
-qplot(x = citric.acid, data = red_wine, binwidth = 0.1,
+qplot(x = citric.acid, data = red_wine, bins = 20,
       xlab = 'citric acid',
       ylab = 'wines',
-color = I('black'), fill = I('#099DD9'))
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
 summary(red_wine$citric.acid)
+
 ```
 
 While there appears to be a broad range of concentrations of citric acid,  most wines fall below 0.75g/dm^3.
 
 ### Residual Sugar
 ```{r echo=FALSE, message=FALSE, warning=FALSE, residual.sugar_histograms}
-qplot(x = residual.sugar, data = red_wine, binwidth = 0.1,
+qplot(x = residual.sugar, data = red_wine, bins = 20,
       
      
-color = I('black'), fill = I('#099DD9'))
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
 summary(red_wine$residual.sugar)
+
 ```
 
 Most wines seem to have residual sugars within a tight range. 
 
 ### Chlorides
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, chlorides_histograms}
-ggplot(red_wine, aes( x   = chlorides  ) ) + 
-geom_histogram(bins=30)
-summary(red_wine$chlorides)
+qplot(x = chlorides, data = red_wine, bins = 20,
+      
+     
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
+summary(red_wine$residual.sugar)
+
 ```
+
+
 
 All values for chlorides are very close with a mean of .087.
 
 ### Free Sulfur
 ```{r echo=FALSE, message=FALSE, warning=FALSE, free.sulfur.dioxide_histograms}
-qplot(x = free.sulfur.dioxide, data = red_wine, binwidth = 0.1,
+qplot(x = free.sulfur.dioxide, data = red_wine, bins = 20,
     
-color = I('black'), fill = I('#099DD9'))
+color = I('black'), fill = I('#099DD9')) #adding blue fill color. 
 summary(red_wine$free.sulfur.dioxide)
 ```
 
@@ -148,7 +175,7 @@ Most values are between 7 and 21. Values higher than 40 are outliers.
 
 ### Total Sulfur
 ```{r echo=FALSE, message=FALSE, warning=FALSE, total.sulfur.dioxide_histograms}
-qplot(x = total.sulfur.dioxide, data = red_wine, binwidth = 0.1,
+qplot(x = total.sulfur.dioxide, data = red_wine, bins = 20,
       xlab = 'total sulfur dioxide',
       ylab = 'count',
 color = I('black'), fill = I('#099DD9'))
@@ -158,50 +185,65 @@ summary(red_wine$total.sulfur.dioxide)
 The mean value is 46 and there are extreme outliers that have values greater than 100.
 
 ### Density
-```{r echo=FALSE, message=FALSE, warning=FALSE, density_histograms}
-qplot(data = red_wine, x = density)
-qplot(data = red_wine, x = density, binwidth = 0.0001)
-summary(red_wine$density)
-```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, density_histograms}
+qplot(x = density, data = red_wine, bins = 20,
+      xlab = 'density',
+      ylab = 'count',
+color = I('black'), fill = I('#099DD9'))
+summary(red_wine$total.density)
+```
 
 The density of wines appears to follow a normal distribution, with a mean density of 0.9967 and a median density of 0.9968.
 
 ### Ph
-```{r echo=FALSE, message=FALSE, warning=FALSE, pH_histograms}
-qplot(data = red_wine, x = pH)
-qplot(data = red_wine, x = pH, binwidth = 0.01)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, ph_histograms}
+qplot(x = pH, data = red_wine, bins = 20,
+      xlab = 'pH',
+      ylab = 'count',
+color = I('black'), fill = I('#099DD9'))
 summary(red_wine$pH)
 ```
 
 The pH of wines also appears follow a fairly normal distribution, with a mean pH of 3.311 and a median pH of 3.310.
 
 ### Sulphates
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, sulphates_histograms}
-qplot(data = red_wine, x = sulphates)
-qplot(data = red_wine, x = sulphates, binwidth = 0.01)
+qplot(x = sulphates, data = red_wine, bins = 20,
+      xlab = 'sulphates',
+      ylab = 'count',
+color = I('black'), fill = I('#099DD9'))
 summary(red_wine$sulphates)
 ```
-
 
 The mean value of sulphates is 0.66, values higher than 1 are considered outliers.
 
 ### Alcohol
-```{r echo=FALSE, message=FALSE, warning=FALSE, alcohol_histograms}
-qplot(data = red_wine, x = alcohol)
-qplot(data = red_wine, x = alcohol, binwidth = 0.1)
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, Alcohol_histograms}
+qplot(x = alcohol, data = red_wine, bins = 20,
+      xlab = 'alcohol',
+      ylab = 'count',
+color = I('black'), fill = I('#099DD9'))
+summary(red_wine$alcohol)
 ```
 
 In alcohol content, there are not many outliers. Most samples contain alcohol between 9 and 10. Only a few have greater than 11. 
 
 ### Quality
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, quality_histograms}
-qplot(data = red_wine, x = quality)
+qplot(x = quality, data = red_wine, bins = 20,
+      xlab = 'quality',
+      ylab = 'count',
+color = I('black'), fill = I('#099DD9'))
 summary(red_wine$quality)
-(681 + 638) / length(red_wine$quality) 
-(10 + 18) / length(red_wine$quality)
+
 ```
+
+Not a lot of high quality wines in this dataset! 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, new_variable_rank}
 #Creating a new variable
@@ -210,6 +252,7 @@ red_wine$rank <- ifelse(red_wine$quality < 5, 'low <5',
 
 ```                     
 
+This new variable will hopefully help me visualize quality in later plots. 
 
 ## Univariate Analysis
 
@@ -244,7 +287,7 @@ The data seems well organized and tidy so I did not perform any operations on th
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots, fig.width = 12, fig.height=15}
 # generate a bivariate grid using GGally
 red_wine.pair = red_wine
-red_wine.pair$X <- NULL
+red_wine.pair$X <- NULL #I don't need this variable so removing it from the plot. 
 ggpairs(red_wine.pair) + ggtitle("pair plots in red wine dataset")
 ```
 
@@ -252,8 +295,8 @@ ggpairs(red_wine.pair) + ggtitle("pair plots in red wine dataset")
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plot_One}
 ggplot(data=red_wine, aes(y=alcohol, x=quality)) + 
-  geom_jitter(alpha = .3)  +
-  stat_summary(fun.y = "mean", 
+  geom_jitter(alpha = .3)  + # using alpha to set color transparency .3 seems to be the best. Jitter adds a small amount of random variation
+  stat_summary(fun = "mean", 
                shape = 8, 
                size = 2) +
   xlab("quality") 
@@ -264,16 +307,16 @@ ggplot(data=red_wine, aes(y=alcohol, x=quality)) +
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plot_Two}
 ggplot(red_wine, aes(x = fixed.acidity, y = citric.acid)) +
-  geom_point(alpha = 0.25) +
-  geom_smooth(method = "lm")
+  geom_point(alpha = 0.25) + # using alpha to set color transparency .25 seems to be the best
+  geom_smooth(method = "lm") # adds single regression line that best fits the data
 ```
 
 ## Plot three of fixed.acidity & pH
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plot_Three}
 ggplot(red_wine, aes(x = fixed.acidity, y = pH)) +
-  geom_point(alpha = 0.25) +
-  geom_smooth(method = "lm")
+  geom_point(alpha = 0.25) + 
+  geom_smooth(method = "lm") 
 ```
 
 ## Plot four of fixed.acidity & Density
@@ -336,21 +379,21 @@ The first multivariate plot will look at alcohol and sulphates since this showed
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plot_1}
 ggplot(red_wine, aes(x = sulphates, y = alcohol, color = quality)) +
-  geom_jitter()
+   geom_point()
 ```
 
 The second multivariate plot will take a look at alcohol and citric acid as it relates to quality. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plot_2}
 ggplot(red_wine, aes(x = citric.acid, y = alcohol, color = quality)) +
-  geom_jitter()
+   geom_point()
 ```
 
 The third multivariate plot will look at the correlation between alcohol, volatile acidity and quality. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plot_3}
 ggplot(red_wine, aes(x = volatile.acidity, y = alcohol, color = quality)) +
-  geom_jitter()
+   geom_point()
 ```
 
 ## Multivariate Analysis
@@ -382,9 +425,10 @@ I did not create any models.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Final_Plot_One}
 ggplot(data=red_wine, aes(y=alcohol, x=quality, color=rank)) + 
-  geom_jitter(alpha = .3)  +
+  geom_jitter(alpha = .3)  + # including alpha level of .3 to set color transparency
   xlab("quality") +
   ggtitle("Influence of alcohol % on wine quality") +
+  
   labs(x = 'Quality Rank', y = 'Alcohol %', 
        title="Influence of alcohol % on wine quality")
   
@@ -396,13 +440,16 @@ It take my 1st Bivariate plot comparing quality as it relates to alcohol content
 
 ## Plot number 2
 
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Final_Plot_Two}
-#Scatter plot
-qplot(x = volatile.acidity, y=alcohol, data=red_wine, color=rank) +
-    geom_point(position=position_jitter(w = 0.025, h = 0.025), alpha=0.4) +
-    guides(alpha=FALSE)  +
-  labs(x = 'Volatile Acidity (g/dm³)', y = 'Alcohol %', 
-       title="Volatile Acidity (g/dm³) vs. Alcohol %")
+# scatterplot - volatile acidity and alcohol, by quality
+ggplot(red_wine, aes(x = volatile.acidity, y = alcohol, color = as.factor(quality))) +
+  geom_point()    +
+    scale_color_brewer(palette = "RdYlBu", name="Quality", direction=-1)+ # Using "RdYlBu" as a specific color scheme, the nameoption changes the legend title and direction=-1 changes the order of the colors to clearly highlight the difference between good and bad wines 
+  theme(panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = "darkgrey")) + # using a darker background for contract
+  labs(x = 'Volatile Acidity (g/dm³)', y = 'Alcohol %', # adding better titles with units. 
+       title="Volatile Acidity (g/dm³) vs. Alcohol %") 
 ```
 
 My second final plot takes my 2nd multivariate plot which I found interesting comparing alcohol % and volatile acidity as they relate to quality and makes it easier to read and understand at a glance. I used the "rank" variable here as well. 
@@ -412,11 +459,11 @@ I also updated the titling and axis labels including units to improve descriptio
 ## Plot number 3
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Final_Plot_Three}
-#Scatter plot
-qplot(x = sulphates, y=alcohol, data=red_wine, color=rank) +
-    geom_point(position=position_jitter(w = 0.025, h = 0.025), alpha=0.4) +
-    guides(alpha=FALSE)  +
-  labs(x = 'Sulphates g/dm3', y = 'Alcohol %', 
+ggplot(red_wine, aes(x = sulphates, y = alcohol, color = as.factor(quality))) +
+  geom_point()    +
+    scale_color_brewer(palette = "RdYlBu", name="Quality", direction=-1)+ 
+  theme(panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = "darkgrey")) + labs(x = 'Sulphates g/dm3', y = 'Alcohol %', 
        title="Sulphates g/dm3 vs. Alcohol %")
 ```
 
